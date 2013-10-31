@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block header %}
+
+
+{% for release in releases %}
+{% if forloop.first %}
+<meta http-equiv="refresh" content="1;URL=/{{ release.path }}">
+{% endif %}
+{% endfor %}
+
+{% endblock %}
+{% block content %}
+
+Downloading latest version...
+
+{% endblock %}

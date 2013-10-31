@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block header %}
+
+{% endblock %}
+{% block content %}
+
+<h2>Downloads</h2>
+
+{% for release in releases %}
+{% if forloop.first %}
+<a href="/{{ release.path }}">
+Latest ({{ release.name }} {{ release.version }})
+</a>
+{% endif %}
+{% endfor %}
+
+
+<h3>Older</h3>
+
+{% for release in releases %}
+{% if not forloop.first %}
+<a href="/{{ release.path }}">{{ release.name }} {{ release.version }}</a><br>
+{% endif %}
+{% endfor %}
+
+{% endblock %}

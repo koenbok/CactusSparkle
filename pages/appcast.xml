@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel>
+		<title>Changelog</title>
+		<link>/appcast.xml</link>
+		<description>Most recent changes with links to updates.</description>
+		<language>en</language>
+
+		{% for release in releases %}
+		<item>
+			<title>Version {{ release.version }}</title>
+			<!-- <sparkle:releaseNotesLink> http://you.com/app/1.4.html </sparkle:releaseNotesLink> -->
+			<!-- <pubDate>Wed, 25 Dec 2005 12:20:11 +0000</pubDate> -->
+			<enclosure 
+					url="http://{{ config.website }}/{{ release.path }}" 
+					sparkle:version="{{ release.version }}" 
+					sparkle:dsaSignature="{{ release.signature }}" 
+					length="{{ release.length }}" 
+					type="application/octet-stream" 
+			/>
+		</item>
+		{% endfor %}
+		
+   </channel>
+</rss>

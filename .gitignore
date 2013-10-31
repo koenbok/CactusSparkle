@@ -1,0 +1,6 @@
+.build
+.deploy
+*.pyc
+static/downloads/*.tar.gz
+static/downloads/*.signature
+sparkle/keys/*.pem
