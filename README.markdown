@@ -1,18 +1,30 @@
-# Preparing your site
+# Cactus Sparkle Site
+
+Use Cactus for your Sparkle updates. This is a Cactus template to automatically version, package and sign your mac desktop application builds with Sparkle, generate an appcast.xml file, and keep an upload archive.
+
+## Preparing your site
 
 - Deploy at least once so cactus knows about the url
 - Add te public key to your application
-- Set the SUPublicDSAKeyFile to yout key name
-- Set the SUFeedURL to http://<your-domain>/appcast.xml
 
-# Preparing your app
+## Preparing your app
 
-
-- Add build.py <YourApp.app> as a step in your build script
+- Add Sparkle
+- Add build.py <build/Release/YourApp.app> as a step in your build script
 - Run cactus upload in this folder to upload
+- Set the SUPublicDSAKeyFile to yout key name
+- Set the SUFeedURL to http://<your-url>/appcast.xml
 
+### Example
 
-# Todo
+http://glueprint-update.s3-website-us-east-1.amazonaws.com/archive/
+http://glueprint-update.s3-website-us-east-1.amazonaws.com/appcast.xml
 
-- Check plist for needed keys
-- Halt on uncomitted changes
+### Versioning
+
+Based on git describe --tags. Make sure you have at least one commit tagged with the format 1.0.0.
+
+### Todo
+
+- Halt on uncomitted changes in build.py
+- Make latest.html that redirects to latest download
