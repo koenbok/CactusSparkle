@@ -3,70 +3,51 @@ import datetime
 import logging
 import json
 
-from cactus.utils.filesystem import fileList
+Globals = {"config": {}, "releases": []}
 
-CONFIG_PATH = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "config.json"))
-RELEASE_PATH = 'static/downloads'
-RELEASES = []
-CONFIG = {}
+sitePath = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
+siteConfigPath = os.path.join(sitePath, "config.json")
+siteReleaseLocation = os.path.join("static", "downloads")
+siteReleasePath = os.path.join(sitePath, siteReleaseLocation)
+
+# Check and load the config path
+if os.path.exists(siteConfigPath):
+	Globals["config"] = json.loads(open(siteConfigPath, "r").read())
+else:
+	logging.warning("Config file is missing at %s", siteConfigPath)
 
 def preBuild(site):
 	
-	global RELEASES
-	global CONFIG
+	global Globals
 
-	if os.path.exists(CONFIG_PATH):
-		data = json.loads(open(CONFIG_PATH, "r").read())
-		CONFIG["website"] = data["aws-bucket-website"]
-	else:
-		logging.warning("Config file is missing at %s", CONFIG_PATH)
-
-
-	files = os.listdir(RELEASE_PATH)
-	files.sort(key=lambda x: 0 - os.path.getmtime(os.path.join(RELEASE_PATH, x)))
-	
-	for item in files:
+	for path in os.listdir(siteReleasePath):
 		
-		if 'latest' in item:
-			continue
-		
-		if not item.endswith(".tar.gz"):
-			continue
-		
-		try:
-			name, version = item.replace('.tar.gz', '').split('-')
-		except:
+		if not path.endswith(".json"):
 			continue
 
-		try:
-			signature = open(os.path.join(RELEASE_PATH, 
-				item.replace('.tar.gz', '.signature')), 'r').read()
-		except Exception, e:
-			print "WARNING: Could not read signature for %s" % item
-			continue
-		
-		fileLength = os.stat(os.path.join(RELEASE_PATH, item)).st_size
-		
-		logging.info('* %s', item)
-		
-		RELEASES.append({
-			'name': name,
-			'path': os.path.join(RELEASE_PATH, item),
-			'file': item,
-			'version': version.replace('v', ''),
-			'signature': signature.strip(),
-			'length': fileLength
-		})
+		releaseInfo = json.loads(open(os.path.join(siteReleasePath, path), "r").read())
+
+		print "* %s %s (%s)" % (
+			releaseInfo["applicationName"],
+			releaseInfo["applicationVersion"]["version"],
+			releaseInfo["applicationVersion"]["build"])
+
+		Globals["releases"].append(releaseInfo)
+
+	# Reverse sort by build number
+	Globals["releases"].sort(key=lambda x: 0 - x["applicationVersion"]["build"])
 
 def preBuildPage(site, page, context, data):
 	
-	
-	context['releases'] = RELEASES
-	context['config'] = CONFIG
+	context["releases"] = Globals["releases"]
+	context["config"] = {
+		"website": Globals["config"]["aws-bucket-website"],
+		"releases": siteReleaseLocation
+	}
 
-	context['latest'] = None
-
-	if len(RELEASES) > 0:
-		context['latest'] = RELEASES[0]
+	if len(Globals["releases"]) > 0:
+		context['latest'] = Globals["releases"][0]
+	else:
+		context['latest'] = None
 	
 	return context, data

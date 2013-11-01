@@ -8,15 +8,15 @@
 
 		{% for release in releases %}
 		<item>
-			<title>Version {{ release.version }}</title>
-			<!-- <sparkle:releaseNotesLink> http://you.com/app/1.4.html </sparkle:releaseNotesLink> -->
+			<title>{{ release.applicationName }} {{ release.applicationVersion.version }}</title>
+			<!-- <sparkle:releaseNotesLink>http://{{ config.website }}/changelog.html#{{ release.applicationVersion.version }}</sparkle:releaseNotesLink> -->
 			<!-- <pubDate>Wed, 25 Dec 2005 12:20:11 +0000</pubDate> -->
 			<enclosure 
-					url="http://{{ config.website }}/{{ release.path }}" 
-					sparkle:version="{{ release.version }}" 
-					sparkle:dsaSignature="{{ release.signature }}" 
-					length="{{ release.length }}" 
-					type="application/octet-stream" 
+				url="http://{{ config.website }}/{{ config.releases }}/{{ release.applicationArchiveName }}" 
+				sparkle:version="{{ release.applicationVersion.build }}" 
+				sparkle:dsaSignature="{{ release.applicationArchiveSignature }}" 
+				length="{{ release.applicationArchiveSize }}" 
+				type="application/octet-stream" 
 			/>
 		</item>
 		{% endfor %}

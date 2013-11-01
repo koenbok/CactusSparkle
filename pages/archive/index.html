@@ -6,20 +6,17 @@
 
 <h2>Downloads</h2>
 
-{% for release in releases %}
-{% if forloop.first %}
+{% if latest %}
 <a href="/{{ release.path }}">
-Latest ({{ release.name }} {{ release.version }})
+Latest ({{ latest.applicationName }} {{ latest.applicationVersion.version }})
 </a>
 {% endif %}
-{% endfor %}
-
 
 <h3>Older</h3>
 
 {% for release in releases %}
 {% if not forloop.first %}
-<a href="/{{ release.path }}">{{ release.name }} {{ release.version }}</a><br>
+<a href="/{{ release.path }}">{{ release.applicationName }} {{ release.applicationVersion.version }}</a><br>
 {% endif %}
 {% endfor %}
 

@@ -2,5 +2,5 @@
 .deploy
 *.pyc
 static/downloads/*.tar.gz
-static/downloads/*.signature
+static/downloads/*.json
 sparkle/keys/*.pem

@@ -6,6 +6,8 @@ import sys
 import subprocess
 import json
 import plistlib
+import time
+import getpass
 
 config = {}
 config["path"] = os.path.realpath(os.path.dirname(__file__))
@@ -45,8 +47,8 @@ def run():
 
     # Write the new version to the application plist
 
-    applicationPlist["CFBundleVersion"] = applicationVersion["version"]
-    applicationPlist["CFBundleShortVersionString"] = applicationVersion["version"]
+    applicationPlist["CFBundleVersion"] = str(applicationVersion["build"])
+    applicationPlist["CFBundleShortVersionString"] = str(applicationVersion["version"])
 
     print "Preparing %s %s (%s)" % (applicationName, applicationVersion["version"], applicationVersion["build"])
 
@@ -90,15 +92,31 @@ def run():
 
 
     # Sign the package
+    
+    applicationArchiveSignature = subprocess.check_output("ruby '%s' '%s' '%s'" % \
+        (config["signScriptPath"], applicationArchivePath, config["signKeyPrivatePath"]), shell=True).strip()
 
-    applicationArchiveSignatureName = "%s-%s.signature" % (applicationName, applicationVersion["version"])
-    applicationArchiveSignaturePath = os.path.join(config["buildPath"], applicationArchiveSignatureName)
+    if not len(applicationArchiveSignature) is 64:
+        sys.exit("Could not sign application (length: %s)" % len(applicationArchiveSignature))
 
-    print "%s (signing archive)" % applicationArchiveSignaturePath
+    # Create json info file
 
-    os.system("ruby '%s' '%s' '%s' > '%s'" % \
-        (config["signScriptPath"], applicationArchivePath, config["signKeyPrivatePath"], applicationArchiveSignaturePath))
+    applicationInfoName = "%s-%s.json" % (applicationName, applicationVersion["version"])
+    applicationInfoPath = os.path.join(config["buildPath"], applicationInfoName)
 
+    applicationInfo = {
+        "time": int(time.time()),
+        "author": getpass.getuser(), 
+        "applicationName": applicationName,
+        "applicationVersion": applicationVersion,
+        "applicationArchiveName": applicationArchiveName,
+        "applicationArchiveSignature": applicationArchiveSignature,
+        "applicationArchiveSize": os.stat(applicationArchivePath).st_size
+    }
+
+    open(applicationInfoPath, "w").write(json.dumps(applicationInfo, sort_keys=True, indent=4))
+
+    print "%s (writing info)" % applicationInfoPath
 
 
 def gitVersion(gitPath):
@@ -124,7 +142,7 @@ def gitVersion(gitPath):
     return {
         "version": parse(sub('git describe --tags').strip('v')),
         "hash": sub('git describe --always --dirty'),
-        "build": sub('git rev-list master | wc -l'),
+        "build": int(sub('git rev-list master | wc -l')),
     }
 
 
