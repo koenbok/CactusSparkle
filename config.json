@@ -1,6 +1,0 @@
-{
-    "aws-access-key": "AKIAIV5C2U4YJM6DRMRQ",
-    "aws-bucket-name": "glueprint-update",
-    "aws-bucket-website": "glueprint-update.s3-website-us-east-1.amazonaws.com",
-    "port": 8857
-}
