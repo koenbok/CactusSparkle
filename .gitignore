@@ -4,3 +4,4 @@
 static/downloads/*.tar.gz
 static/downloads/*.json
 sparkle/keys/*.pem
+config.json
