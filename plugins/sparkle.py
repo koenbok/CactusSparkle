@@ -1,4 +1,5 @@
 import os
+import sys
 import datetime
 import logging
 import json
@@ -41,7 +42,7 @@ def preBuildPage(site, page, context, data):
 	
 	context["releases"] = Globals["releases"]
 	context["config"] = {
-		"website": Globals["config"]["aws-bucket-website"],
+		"website": Globals["config"].get("aws-bucket-website"),
 		"releases": siteReleaseLocation
 	}
 

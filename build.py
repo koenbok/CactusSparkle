@@ -67,10 +67,12 @@ def run():
 
     # Check if the right keys are in the plist
     plistSUFeedURL = applicationPlist.get("SUFeedURL")
+    plistSUFeedURLActual = "http://%s/appcast.xml" % siteBucketWebsite
+
     plistSUPublicDSAKeyFile = applicationPlist.get("SUPublicDSAKeyFile")
 
-    if not plistSUFeedURL == "http://%s/appcast.xml" % siteBucketWebsite:
-        sys.exit("SUFeedURL is not correct: %s", plistSUFeedURL)
+    if not plistSUFeedURL == plistSUFeedURLActual:
+        sys.exit("SUFeedURL is not correct...\n-> %s\n-> %s" % (plistSUFeedURL, plistSUFeedURLActual))
 
     if not plistSUPublicDSAKeyFile:
         sys.exit("Missing key SUPublicDSAKeyFile in plist")
