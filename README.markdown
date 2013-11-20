@@ -24,6 +24,16 @@ Use Cactus for your Sparkle updates. This is a Cactus template to automatically 
 
 Based on git describe --tags. Make sure you have at least one commit tagged with the format 1.0.0.
 
+### Mac App Store
+
+If you want this to live side by side with an app store version do the following:
+
+- Create a new build target named App Store
+- Enable all app store code signing
+- Set up a different Prefix file for each target to add macro variables
+- Conditionally remove the sparkle libs and menu item
+- Give the app store version a different app identifier
+
 ### Todo
 
 - Halt on uncomitted changes in build.py
