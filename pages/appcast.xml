@@ -14,6 +14,7 @@
 			<enclosure 
 				url="http://{{ config.website }}/{{ config.releases }}/{{ release.applicationArchiveName }}" 
 				sparkle:version="{{ release.applicationVersion.build }}" 
+				sparkle:shortVersionString="{{ release.applicationVersion.version }}" 
 				sparkle:dsaSignature="{{ release.applicationArchiveSignature }}" 
 				length="{{ release.applicationArchiveSize }}" 
 				type="application/octet-stream" 

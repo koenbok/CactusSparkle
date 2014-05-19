@@ -52,7 +52,21 @@ def run():
 
     print "Preparing %s %s (%s)" % (applicationName, applicationVersion["version"], applicationVersion["build"])
 
-    plistlib.writePlist(applicationPlist, applicationPlistPath)
+    # Writing to the plist breaks signing, we should just alert
+
+    def assertEqual(a, b, name):
+        if a != b:
+            sys.exit("%s does not match '%s' '%s'", name, a, b)
+
+    assertEqual(
+        applicationPlist["CFBundleVersion"], 
+        str(applicationVersion["build"]), 
+        "CFBundleVersion")
+
+    assertEqual(
+        applicationPlist["CFBundleShortVersionString"], 
+        str(applicationVersion["version"]), 
+        "CFBundleShortVersionString")
 
 
     # Check if the cactus configuration is correct
