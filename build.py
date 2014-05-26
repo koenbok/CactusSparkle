@@ -157,7 +157,7 @@ def gitVersion(gitPath):
     version = {
         "version": parse(sub('git describe --tags').strip('v')),
         "hash": sub('git describe --always --dirty'),
-        "build": int(sub('git rev-list --all | wc -l')),
+        "build": int(sub('git rev-list master| wc -l')),
     }
 
     return version
