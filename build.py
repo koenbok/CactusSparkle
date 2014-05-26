@@ -47,16 +47,15 @@ def run():
 
     # Write the new version to the application plist
 
-    applicationPlist["CFBundleVersion"] = str(applicationVersion["build"])
-    applicationPlist["CFBundleShortVersionString"] = str(applicationVersion["version"])
+    # applicationPlist["CFBundleVersion"] = str(applicationVersion["build"])
+    # applicationPlist["CFBundleShortVersionString"] = str(applicationVersion["version"])
 
     print "Preparing %s %s (%s)" % (applicationName, applicationVersion["version"], applicationVersion["build"])
 
     # Writing to the plist breaks signing, we should just alert
 
     def assertEqual(a, b, name):
-        if a != b:
-            sys.exit("%s does not match '%s' '%s'", name, a, b)
+        if a != b: sys.exit("%s does not match '%s' '%s'" % (name, a, b))
 
     assertEqual(
         applicationPlist["CFBundleVersion"], 
@@ -155,11 +154,13 @@ def gitVersion(gitPath):
         cmd = "cd '%s'; %s" % (gitPath, cmd)
         return subprocess.check_output(cmd, shell=True).strip()
 
-    return {
+    version = {
         "version": parse(sub('git describe --tags').strip('v')),
         "hash": sub('git describe --always --dirty'),
-        "build": int(sub('git rev-list master | wc -l')),
+        "build": int(sub('git rev-list --all | wc -l')),
     }
+
+    return version
 
 
 run()
