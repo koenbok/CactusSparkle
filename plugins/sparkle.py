@@ -40,9 +40,14 @@ def preBuild(site):
 
 def preBuildPage(site, page, context, data):
 	
+	website = Globals["config"].get("website")
+	
+	if not website:
+		website = Globals["config"].get("aws-bucket-website")
+
 	context["releases"] = Globals["releases"]
 	context["config"] = {
-		"website": Globals["config"].get("aws-bucket-website"),
+		"website": website,
 		"releases": siteReleaseLocation
 	}
 
