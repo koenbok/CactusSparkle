@@ -84,8 +84,8 @@ def run():
 
     plistSUPublicDSAKeyFile = applicationPlist.get("SUPublicDSAKeyFile")
 
-    if not plistSUFeedURL == plistSUFeedURLActual:
-        sys.exit("SUFeedURL is not correct...\n-> %s\n-> %s" % (plistSUFeedURL, plistSUFeedURLActual))
+    # if not plistSUFeedURL == plistSUFeedURLActual:
+    #     sys.exit("SUFeedURL is not correct...\n-> %s\n-> %s" % (plistSUFeedURL, plistSUFeedURLActual))
 
     if not plistSUPublicDSAKeyFile:
         sys.exit("Missing key SUPublicDSAKeyFile in plist")
@@ -93,7 +93,8 @@ def run():
 
     # Package up the application in a versioned gzip file
 
-    applicationArchiveName = "%s-%s.tar.gz" % (applicationName, applicationVersion["version"])
+    # applicationArchiveName = "%s-%s.tar.gz" % (applicationName, applicationVersion["version"])
+    applicationArchiveName = "%s-%s.zip" % (applicationName, applicationVersion["version"])
     applicationArchivePath = os.path.join(config["buildPath"], applicationArchiveName)
 
     if os.path.exists(applicationArchivePath):
@@ -102,9 +103,11 @@ def run():
     print "%s (creating archive)" % applicationArchivePath
 
     # We use tar.gz because it's so much smaller then just zip
-    os.system("cd '%s'; tar -cz -f '%s' '%s'" % \
-        (os.path.dirname(applicationPath), applicationArchivePath, os.path.basename(applicationPath)))
+    # os.system("cd '%s'; /Volumes/Backup/usr/bin/tar -cz -f '%s' '%s'" % \
+    #     (os.path.dirname(applicationPath), applicationArchivePath, os.path.basename(applicationPath)))
 
+    os.system("cd '%s'; zip -r --symlinks '%s' '%s'" % \
+        (os.path.dirname(applicationPath), applicationArchivePath, os.path.basename(applicationPath)))
 
     # Sign the package
     
