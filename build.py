@@ -17,6 +17,8 @@ config["signScriptPath"] = os.path.join(config["path"], "sparkle", "tools", "sig
 config["signKeyPublicPath"] = os.path.join(config["path"], "sparkle", "keys", "dsa_pub.pem")
 config["signKeyPrivatePath"] = os.path.join(config["path"], "sparkle", "keys", "dsa_priv.pem")
 
+
+
 def run():
 
     for key, path in config.iteritems():
@@ -44,6 +46,9 @@ def run():
 
     applicationPlist = plistlib.readPlist(applicationPlistPath)
     applicationVersion = gitVersion(applicationPath)
+
+    if gitBranchName(applicationPath) != "master":
+        raise AssertionError('Branch not master but %s' % gitBranchName(applicationPath))
 
     # Write the new version to the application plist
 
@@ -136,6 +141,12 @@ def run():
 
     print "%s (writing info)" % applicationInfoPath
 
+
+def gitBranchName(gitPath):
+    return subprocess.check_output("git rev-parse --abbrev-ref HEAD", shell=True).strip()
+
+    if getBranchName(gitPath) != "master":
+        raise AssertionError('Branch not master but %s' % getBranchName(gitPath))
 
 def gitVersion(gitPath):
 
